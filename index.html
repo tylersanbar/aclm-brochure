@@ -92,18 +92,31 @@
   </div>
 
   <script>
-    const data = {
-      title: "ACLM 64th ANNUAL CONFERENCE",
-      subtitle: "NAVIGATING THE NEXUS",
-      subtitle_desc: "Exploring the Intersection of Law, Medicine, and Dentistry in an Era of Technological Advancements",
-      conference_dates: "MARCH 1–3, 2024",
-      conference_location: "Hyatt Regency Mission Bay, San Diego, CA"
-    };
+async function loadData() {
+  const url = "YOUR_CSV_URL_HERE";
 
-    Object.keys(data).forEach(key => {
-      const el = document.getElementById(key);
-      if (el) el.textContent = data[key];
-    });
-  </script>
+  const res = await fetch(url);
+  const text = await res.text();
+
+  const rows = text.split("\n").map(r => r.split(","));
+
+  const headers = rows[0];
+  const values = rows[1];
+
+  const data = {};
+
+  headers.forEach((header, i) => {
+    data[header.trim()] = values[i]?.trim();
+  });
+
+  // populate page
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) el.textContent = data[key];
+  });
+}
+
+loadData();
+</script>
 </body>
 </html>
