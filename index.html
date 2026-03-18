@@ -91,32 +91,42 @@
     </div>
   </div>
 
-  <script>
+<script>
 async function loadData() {
   const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vToqKJSCELUpiXvPIP_YiXZPHHghwnYYPVPIroFUNVWt7Jb85B_wuNiF1yl3hOZjX6JcGT86K14rJoi/pub?gid=0&single=true&output=csv";
 
   const res = await fetch(url);
   const text = await res.text();
 
-  const rows = text.split("\n").map(r => r.split(","));
+  const rows = text
+    .trim()
+    .split("\n")
+    .map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 
-  const headers = rows[0];
-  const values = rows[1];
+  // Remove header row
+  const dataRows = rows.slice(1);
 
   const data = {};
 
-  headers.forEach((header, i) => {
-    data[header.trim()] = values[i]?.trim();
+  dataRows.forEach(row => {
+    const value = row[1]?.replace(/^"|"$/g, "").trim();
+    const fieldId = row[2]?.replace(/^"|"$/g, "").trim();
+
+    if (fieldId) {
+      data[fieldId] = value;
+    }
   });
 
-  // populate page
+  // Populate HTML
   Object.keys(data).forEach(key => {
     const el = document.getElementById(key);
     if (el) el.textContent = data[key];
   });
 }
 
-loadData();
+loadData().catch(err => {
+  console.error("Failed to load conference data:", err);
+});
 </script>
 </body>
 </html>
