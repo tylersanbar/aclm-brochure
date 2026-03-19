@@ -2,131 +2,364 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Conference Brochure</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACLM Brochure</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: #f5f5f5;
+    :root {
+      --page-width: 8.5in;
+      --page-height: 11in;
+      --text: #222;
+      --muted: #555;
+      --light-gray: #d9d9d9;
+      --dark-gray: #7f7f7f;
     }
 
-    .page {
-      width: 8.5in;
-      height: 11in;
-      margin: auto;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #ececec;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+    }
+
+    .brochure-page {
+      position: relative;
+      width: var(--page-width);
+      min-height: var(--page-height);
+      margin: 24px auto;
       background: white;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .page-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0.75in;
+    }
+
+    /* =========================
+       PAGE 1 - TITLE PAGE
+       ========================= */
+    .title-page .page-inner {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 1in;
-      box-sizing: border-box;
       text-align: center;
+      padding: 1in;
     }
 
     .title {
-      font-size: 36px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 20px;
+      font-size: 0.42in;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.22in;
+      text-transform: uppercase;
     }
 
     .subtitle {
-      font-size: 22px;
+      font-size: 0.28in;
       font-weight: 600;
-      letter-spacing: 2px;
-      margin-bottom: 15px;
+      letter-spacing: 0.08em;
       color: #444;
+      margin-bottom: 0.16in;
+      text-transform: uppercase;
     }
 
     .subtitle-desc {
-      font-size: 14px;
-      max-width: 500px;
+      font-size: 0.16in;
       line-height: 1.5;
-      margin-bottom: 40px;
+      max-width: 5.6in;
       color: #666;
+      margin-bottom: 0.4in;
     }
 
-    .divider {
-      width: 60px;
+    .title-divider {
+      width: 0.8in;
       height: 2px;
-      background: #000;
-      margin: 20px 0;
+      background: #222;
+      margin-bottom: 0.35in;
     }
 
-    .details {
-      font-size: 16px;
-      line-height: 1.8;
+    .title-details {
+      font-size: 0.18in;
+      line-height: 1.7;
       color: #333;
+    }
+
+    /* =========================
+       PAGE 2 - OBJECTIVES PAGE
+       ========================= */
+    .objectives-page .top-band {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1.35in;
+      background: linear-gradient(
+        172deg,
+        var(--light-gray) 0%,
+        var(--light-gray) 62%,
+        transparent 62.5%,
+        transparent 100%
+      );
+      z-index: 0;
+    }
+
+    .objectives-page .page-inner {
+      z-index: 1;
+      padding: 0.55in 0.65in 0.65in 0.65in;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      min-height: 0.55in;
+      margin-bottom: 0.18in;
+    }
+
+    .page-header-text {
+      font-size: 0.14in;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-align: right;
+      color: #222;
+      max-width: 3.2in;
+    }
+
+    .section-label {
+      font-size: 0.26in;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      margin: 0 0 0.12in 0;
+    }
+
+    .intro-text,
+    .objectives-intro {
+      font-size: 0.14in;
+      line-height: 1.45;
+      margin: 0 0 0.2in 0;
+      color: #222;
+    }
+
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.3in;
+      row-gap: 0.14in;
+      align-items: start;
+    }
+
+    .objective-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.08in;
+      font-size: 0.14in;
+      line-height: 1.32;
+      break-inside: avoid;
+    }
+
+    .objective-number {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .objective-text {
+      color: #222;
+    }
+
+    .loading-note,
+    .error-note {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 9999;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @page {
+      size: letter portrait;
+      margin: 0;
     }
 
     @media print {
       body {
         background: white;
       }
-      .page {
+
+      .brochure-page {
         margin: 0;
         width: 100%;
-        height: 100%;
-        page-break-after: always;
+        min-height: 100vh;
+        box-shadow: none;
+      }
+
+      .loading-note,
+      .error-note {
+        display: none !important;
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="page">
-    <div class="title" id="title"></div>
+  <div class="loading-note" id="loadingNote">Loading brochure data...</div>
+  <div class="error-note hidden" id="errorNote">Failed to load brochure data.</div>
 
-    <div class="subtitle" id="subtitle"></div>
-
-    <div class="subtitle-desc" id="subtitle_desc"></div>
-
-    <div class="divider"></div>
-
-    <div class="details">
-      <div id="conference_dates"></div>
-      <div id="conference_location"></div>
+  <!-- PAGE 1 -->
+  <section class="brochure-page title-page">
+    <div class="page-inner">
+      <div class="title" id="title"></div>
+      <div class="subtitle" id="subtitle"></div>
+      <div class="subtitle-desc" id="subtitle_desc"></div>
+      <div class="title-divider"></div>
+      <div class="title-details">
+        <div id="conference_dates"></div>
+        <div id="conference_location"></div>
+      </div>
     </div>
-  </div>
+  </section>
 
-<script>
-async function loadData() {
-  const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vToqKJSCELUpiXvPIP_YiXZPHHghwnYYPVPIroFUNVWt7Jb85B_wuNiF1yl3hOZjX6JcGT86K14rJoi/pub?gid=0&single=true&output=csv";
+  <!-- PAGE 2 -->
+  <section class="brochure-page objectives-page">
+    <div class="top-band"></div>
 
-  const res = await fetch(url);
-  const text = await res.text();
+    <div class="page-inner">
+      <div class="page-header">
+        <div class="page-header-text" id="conference_header">
+          2024 ACLM 64th ANNUAL CONFERENCE
+        </div>
+      </div>
 
-  const rows = text
-    .trim()
-    .split("\n")
-    .map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+      <h1 class="section-label" id="education_title">Educational Statement</h1>
 
-  // Remove header row
-  const dataRows = rows.slice(1);
+      <p class="intro-text" id="education_statement">
+        Welcome to “Navigating the Nexus,” a cutting-edge legal medicine conference where we explore the dynamic intersection of law, medicine, and dentistry amid rapid technological advancements. Enjoy groundbreaking discussions on the ethical and legal implications of artificial intelligence in healthcare, explore the evolving landscape of medical and dental practices, and critically analyze the legal issues in the ever-expanding realm of medical technology. Join thought leaders, legal experts, and healthcare professionals as we navigate this complex nexus, forging a path that harmonizes innovation with ethical and legal responsibilities, shaping the future of healthcare in an era of unprecedented technological progress.
+      </p>
 
-  const data = {};
+      <h2 class="section-label" id="objectives_title">Objectives</h2>
 
-  dataRows.forEach(row => {
-    const value = row[1]?.replace(/^"|"$/g, "").trim();
-    const fieldId = row[2]?.replace(/^"|"$/g, "").trim();
+      <p class="objectives-intro" id="objectives_intro">
+        In line with our conference theme, Navigating the Nexus: Exploring the Intersection of Law, Medicine, and Dentistry in an Era of Technological Advancements, and the mission of ACLM to continue the professional advancement of its members, the ACLM’s 64th Annual Conference will provide and improve the knowledge and understanding of attendees in the following areas:
+      </p>
 
-    if (fieldId) {
-      data[fieldId] = value;
+      <div class="objectives-grid" id="objectives_grid"></div>
+    </div>
+  </section>
+
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vToqKJSCELUpiXvPIP_YiXZPHHghwnYYPVPIroFUNVWt7Jb85B_wuNiF1yl3hOZjX6JcGT86K14rJoi/pub?gid=0&single=true&output=csv";
+
+    const fallbackObjectives = [
+      { number: "1.", text: "Recent updates in federal and state legislation, case law, and regulation" },
+      { number: "2.", text: "The transformative potential of artificial intelligence in diverse healthcare domains" },
+      { number: "3.", text: "How medicine and technology are remaking the law of reproduction" },
+      { number: "4.", text: "Legal aspects of computer-generated perceptual information in dentistry" },
+      { number: "5.", text: "Insights into the Asylum Hill Project" },
+      { number: "6.", text: "Legal and regulatory landscape of psychedelics in clinical medicine" },
+      { number: "7.", text: "Awareness and adherence to legal obligations and ethical standards for dental professionals" },
+      { number: "8.", text: "The landscape of fraud and abuse in healthcare" },
+      { number: "9.", text: "The promise and responsible utilization of artificial intelligence in oral health improvement" },
+      { number: "10.", text: "Legal strategies surrounding litigation funding" },
+      { number: "11.", text: "Ethical and legal considerations related to the integration of artificial intelligence in dentistry" },
+      { number: "12.", text: "Consciousness and communication in technology-driven healthcare" },
+      { number: "13.", text: "Mechanisms for responding to patient harm" },
+      { number: "14.", text: "Licensing, credentialing, and peer review" },
+      { number: "15.", text: "Managing mishaps, patient safety, and discipline resolution" },
+      { number: "16.", text: "Understanding the field of repressed memories" },
+      { number: "17.", text: "Global public health dynamics" },
+      { number: "18.", text: "Compliance, challenges, and innovations in contemporary dental practices" },
+      { number: "19.", text: "Regulatory landscape for drug development and approval by the FDA" },
+      { number: "20.", text: "Cognition, law, and the aging professional" },
+      { number: "21.", text: "Legal challenges and ethical complexities of mental well-being" }
+    ];
+
+    function parseCsvRow(row) {
+      return row
+        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+        .map(cell => cell.replace(/^"|"$/g, "").trim());
     }
-  });
 
-  // Populate HTML
-  Object.keys(data).forEach(key => {
-    const el = document.getElementById(key);
-    if (el) el.textContent = data[key];
-  });
-}
+    function renderObjectives(objectives) {
+      const grid = document.getElementById("objectives_grid");
+      grid.innerHTML = objectives.map(item => `
+        <div class="objective-item">
+          <div class="objective-number">${item.number}</div>
+          <div class="objective-text">${item.text}</div>
+        </div>
+      `).join("");
+    }
 
-loadData().catch(err => {
-  console.error("Failed to load conference data:", err);
-});
-</script>
+    function populateFields(data) {
+      Object.keys(data).forEach(key => {
+        const el = document.getElementById(key);
+        if (el) el.textContent = data[key];
+      });
+
+      // Auto-build conference header if not explicitly in sheet
+      const headerEl = document.getElementById("conference_header");
+      if (headerEl && !data.conference_header) {
+        const dateText = data.conference_dates || "";
+        const yearMatch = dateText.match(/\b(20\d{2})\b/);
+        const year = yearMatch ? yearMatch[1] : "";
+        const title = data.title || "";
+        headerEl.textContent = [year, title].filter(Boolean).join(" ");
+      }
+    }
+
+    async function loadData() {
+      const loadingNote = document.getElementById("loadingNote");
+      const errorNote = document.getElementById("errorNote");
+
+      try {
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+
+        const rows = text.trim().split("\n").map(parseCsvRow);
+        const dataRows = rows.slice(1);
+
+        const data = {};
+
+        dataRows.forEach(row => {
+          const value = row[1] || "";
+          const fieldId = row[2] || "";
+
+          if (fieldId) {
+            data[fieldId] = value;
+          }
+        });
+
+        populateFields(data);
+        renderObjectives(fallbackObjectives);
+
+        loadingNote.classList.add("hidden");
+      } catch (err) {
+        console.error("Failed to load conference data:", err);
+        loadingNote.classList.add("hidden");
+        errorNote.classList.remove("hidden");
+
+        renderObjectives(fallbackObjectives);
+      }
+    }
+
+    loadData();
+  </script>
 </body>
 </html>
